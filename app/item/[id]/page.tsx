@@ -2,9 +2,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
 
-export const dynamic = 'error';
+export const dynamicParams = true;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return [];
 }
 
