@@ -1,7 +1,11 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error';
+
+export function generateStaticParams() {
+  return [];
+}
 
 export default async function MerchantPage({ params }: { params: Promise<{ merchantId: string }> }) {
   const { merchantId } = await params;
