@@ -120,7 +120,7 @@ export function BrowseClient() {
           {filteredItems.map((item) => (
             <Link
               key={item.id}
-              href={`/item/${item.id}`}
+              href={`/item/${item.id}/`}
               className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-shadow border border-purple-100"
             >
               <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 relative">
@@ -128,6 +128,7 @@ export function BrowseClient() {
                   src={item.image_url}
                   alt={item.name}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="p-4">

@@ -46,7 +46,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
     <div className="min-h-screen">
       <header className="bg-white/80 backdrop-blur-sm border-b border-purple-100 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <Link href="/browse" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <Link href="/browse/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             ← Back to Browse
           </Link>
         </div>
@@ -60,6 +60,7 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
               src={itemData.image_url}
               alt={itemData.name}
               className="w-full h-full object-cover"
+              loading="lazy"
             />
           </div>
 

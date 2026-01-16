@@ -1,8 +1,76 @@
-import HomeClient from '@/components/HomeClient';
+'use client';
 
-export default function HomePage() {
-  return <HomeClient />;
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+
+interface Item {
+  id: string;
+  name: string;
+  value_cents: number;
+  category: string;
+  image_url: string;
+  merchant_id: string;
 }
+
+interface Merchant {
+  id: string;
+  name: string;
+  locations: string[];
+}
+
+export default function HomeClient() {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [popularItems, setPopularItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const basePath = process.env.NODE_ENV === 'production' ? '/GiftingApp' : '';
+        const response = await fetch(`${basePath}/static-data.json`);
+        const db = await response.json();
+
+        const cats = [...new Set(db.items.map((item: Item) => item.category))]
+          .sort();
+        setCategories(cats as string[]);
+
+        const items = db.items
+          .map((item: Item) => {
+            const merchant = db.merchants.find((m: Merchant) => m.id === item.merchant_id);
+            return {
+              ...item,
+              merchant_name: merchant?.name,
+              locations: merchant?.locations
+            };
+          })
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 6);
+
+        setPopularItems(items);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        setLoading(false);
+      }
+    }
+
+    loadData();
+  }, []);
+
+  const basePath = typeof window !== 'undefined' && process.env.NODE_ENV === 'production' ? '/GiftingApp' : '';
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">🎁</div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div className="min-h-screen">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-purple-100 sticky top-0 z-10">
@@ -14,8 +82,8 @@ export default function HomePage() {
               </h1>
               <p className="text-sm text-gray-600">Send treats, spread joy</p>
             </div>
-            <Link 
-              href="/browse"
+            <Link
+              href="/browse/"
               className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-shadow"
             >
               Send a Gift
@@ -34,8 +102,8 @@ export default function HomePage() {
           <p className="text-lg md:text-xl text-gray-600 mb-8">
             Choose a specific treat, add a message, and share instantly. They redeem in-store with a QR code.
           </p>
-          <Link 
-            href="/browse"
+          <Link
+            href="/browse/"
             className="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-4 rounded-full text-lg font-medium hover:shadow-xl transition-all hover:scale-105"
           >
             Start Gifting →
@@ -47,18 +115,18 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Browse by Category</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {categories.map((cat) => (
-            <Link 
-              key={cat.category}
-              href={`/browse?category=${encodeURIComponent(cat.category)}`}
+          {categories.map((category) => (
+            <Link
+              key={category}
+              href={`/browse/?category=${encodeURIComponent(category)}`}
               className="bg-white p-6 rounded-2xl text-center hover:shadow-lg transition-shadow border border-purple-100"
             >
               <div className="text-3xl mb-2">
-                {cat.category.includes('Coffee') ? '☕' : 
-                 cat.category.includes('Dessert') ? '🍰' :
-                 cat.category.includes('Flower') ? '💐' : '✨'}
+                {category.includes('Coffee') ? '☕' :
+                 category.includes('Dessert') ? '🧁' :
+                 category.includes('Flower') ? '🌸' : '✨'}
               </div>
-              <h4 className="font-semibold text-gray-900">{cat.category}</h4>
+              <h4 className="font-semibold text-gray-900">{category}</h4>
             </Link>
           ))}
         </div>
@@ -69,16 +137,17 @@ export default function HomePage() {
         <h3 className="text-2xl font-bold text-gray-900 mb-6">Popular This Week</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {popularItems.map((item: any) => (
-            <Link 
+            <Link
               key={item.id}
-              href={`/item/${item.id}`}
+              href={`/item/${item.id}/`}
               className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-shadow border border-purple-100"
             >
               <div className="aspect-video bg-gradient-to-br from-purple-100 to-pink-100 relative">
-                <img 
-                  src={item.image_url} 
+                <img
+                  src={item.image_url}
                   alt={item.name}
                   className="w-full h-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="p-4">

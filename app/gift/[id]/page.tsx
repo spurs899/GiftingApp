@@ -99,6 +99,7 @@ export default async function GiftPage({ params }: { params: Promise<{ id: strin
                 src={gift.item_image_url}
                 alt={gift.item_name}
                 className="w-24 h-24 object-cover rounded-xl"
+                loading="lazy"
               />
               <div className="flex-1">
                 <h3 className="font-bold text-gray-900 text-lg">{giftData.item_name}</h3>

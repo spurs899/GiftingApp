@@ -4,12 +4,37 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script>
-      // Redirect 404 to index.html with path as query param for client-side routing
-      const path = window.location.pathname.replace('/GiftingApp', '');
-      window.location.replace('/GiftingApp' + (path === '/404.html' ? '/' : path));
+      // GitHub Pages SPA redirect handler
+      // This handles client-side routing for dynamic paths
+      (function() {
+        var path = window.location.pathname;
+        
+        // Remove /GiftingApp prefix if present
+        if (path.startsWith('/GiftingApp')) {
+          path = path.substring('/GiftingApp'.length);
+        }
+        
+        // If it's the 404 page itself, go to home
+        if (path === '/404.html' || path === '/404') {
+          window.location.replace('/GiftingApp/');
+          return;
+        }
+        
+        // Add trailing slash if missing and not a file
+        if (path && !path.endsWith('/') && !path.includes('.')) {
+          path = path + '/';
+        }
+        
+        // Redirect to the path with basePath
+        if (path && path !== '/') {
+          window.location.replace('/GiftingApp' + path + window.location.search);
+        } else {
+          window.location.replace('/GiftingApp/');
+        }
+      })();
     </script>
   </head>
   <body>
-    Redirecting...
+    <p>Redirecting...</p>
   </body>
 </html>
