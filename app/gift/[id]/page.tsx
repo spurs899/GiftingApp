@@ -1,97 +1,55 @@
-'use client';
-
-import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import QRCode from 'qrcode';
+import { ShareButtons } from '@/components/ShareButtons';
 
-export default function GiftPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = use(params);
-  const [gift, setGift] = useState<any>(null);
-  const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
-  const [loading, setLoading] = useState(true);
-  const [copied, setCopied] = useState(false);
+export const dynamicParams = true;
 
-  useEffect(() => {
-    async function loadGift() {
-      try {
-        // Load static data directly
-        const basePath = process.env.NODE_ENV === 'production' ? '/GiftingApp' : '';
-        const response = await fetch(`${basePath}/static-data.json`);
-        const db = await response.json();
-        
-        const giftData = db.gifts.find((g: any) => g.id === id);
-        if (!giftData) {
-          notFound();
-          return;
-        }
+export async function generateStaticParams() {
+  return [];
+}
 
-        const item = db.items.find((i: any) => i.id === giftData.item_id);
-        const merchant = db.merchants.find((m: any) => m.id === item?.merchant_id);
+async function loadStaticData() {
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  const dataPath = path.join(process.cwd(), 'public', 'static-data.json');
+  const data = await fs.readFile(dataPath, 'utf-8');
+  return JSON.parse(data);
+}
 
-        // Generate QR code
-        const qrUrl = await QRCode.toDataURL(giftData.qr_code, {
-          width: 300,
-          margin: 2,
-          color: {
-            dark: '#7c3aed',
-            light: '#ffffff'
-          }
-        });
-
-        setGift({
-          ...giftData,
-          item_name: item?.name,
-          item_image_url: item?.image_url,
-          merchant_name: merchant?.name,
-          merchant_locations: merchant?.locations
-        });
-        setQrCodeUrl(qrUrl);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to load gift:', error);
-        setLoading(false);
-      }
-    }
-
-    loadGift();
-  }, [id]);
-
-  const giftUrl = typeof window !== 'undefined' ? window.location.href : '';
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(giftUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  const shareViaWhatsApp = () => {
-    const text = `${gift.sender_name} sent you a gift! 🎁`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + giftUrl)}`);
-  };
-
-  const shareViaEmail = () => {
-    const subject = `${gift.sender_name} sent you a gift!`;
-    const body = `Hi!\n\n${gift.sender_name} has sent you a treat: ${gift.item_name}\n\nView and redeem your gift here: ${giftUrl}`;
-    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading gift...</p>
-        </div>
-      </div>
-    );
-  }
-
+export default async function GiftPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const db = await loadStaticData();
+  
+  const gift = db.gifts.find((g: any) => g.id === id);
   if (!gift) {
     notFound();
   }
 
-  const locations = gift.merchant_locations;
+  const item = db.items.find((i: any) => i.id === gift.item_id);
+  const merchant = db.merchants.find((m: any) => m.id === item?.merchant_id);
+
+  // Generate QR code
+  const qrCodeUrl = await QRCode.toDataURL(gift.qr_code, {
+    width: 300,
+    margin: 2,
+    color: {
+      dark: '#7c3aed',
+      light: '#ffffff'
+    }
+  });
+
+  const giftData = {
+    ...gift,
+    item_name: item?.name,
+    item_image_url: item?.image_url,
+    item_description: item?.description,
+    merchant_name: merchant?.name,
+    merchant_locations: merchant?.locations,
+    qr_url: qrCodeUrl
+  };
+
+  const locations = giftData.merchant_locations;
 
   return (
     <div className="min-h-screen">
@@ -116,11 +74,11 @@ export default function GiftPage({ params }: { params: Promise<{ id: string }> }
           <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-8 text-white text-center">
             <div className="text-5xl mb-3">🎁</div>
             <h1 className="text-2xl font-bold mb-2">You received a gift!</h1>
-            <p className="text-purple-100">From {gift.sender_name}</p>
+            <p className="text-purple-100">From {giftData.sender_name}</p>
           </div>
 
           <div className="p-6">
-            {gift.recipient_message && (
+            {giftData.recipient_message && (
               <div className="bg-purple-50 rounded-xl p-4 mb-6">
                 <p className="text-gray-700 italic">"{gift.recipient_message}"</p>
               </div>
@@ -133,10 +91,10 @@ export default function GiftPage({ params }: { params: Promise<{ id: string }> }
                 className="w-24 h-24 object-cover rounded-xl"
               />
               <div className="flex-1">
-                <h3 className="font-bold text-gray-900 text-lg">{gift.item_name}</h3>
-                <p className="text-gray-600">{gift.merchant_name}</p>
+                <h3 className="font-bold text-gray-900 text-lg">{giftData.item_name}</h3>
+                <p className="text-gray-600">{giftData.merchant_name}</p>
                 <p className="text-purple-600 font-semibold mt-1">
-                  ${(gift.value_cents / 100).toFixed(2)}
+                  ${(giftData.value_cents / 100).toFixed(2)}
                 </p>
               </div>
             </div>
@@ -153,13 +111,11 @@ export default function GiftPage({ params }: { params: Promise<{ id: string }> }
             {/* QR Code */}
             <div className="bg-gray-50 rounded-xl p-6 text-center">
               <p className="text-sm font-medium text-gray-700 mb-3">Show this QR code in-store:</p>
-              {qrCodeUrl && (
-                <img src={qrCodeUrl} alt="QR Code" className="mx-auto w-48 h-48" />
-              )}
-              <p className="text-xs text-gray-500 mt-3">Code: {gift.qr_code}</p>
+              <img src={giftData.qr_url} alt="QR Code" className="mx-auto w-48 h-48" />
+              <p className="text-xs text-gray-500 mt-3">Code: {giftData.qr_code}</p>
             </div>
 
-            {gift.is_redeemed ? (
+            {giftData.is_redeemed ? (
               <div className="mt-6 bg-gray-100 rounded-xl p-4 text-center">
                 <p className="text-gray-600 font-medium">✓ This gift has been redeemed</p>
               </div>
@@ -168,32 +124,10 @@ export default function GiftPage({ params }: { params: Promise<{ id: string }> }
         </div>
 
         {/* Share Options */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-purple-100">
-          <h3 className="font-semibold text-gray-900 mb-4">Share this gift</h3>
-          
-          <div className="space-y-3">
-            <button
-              onClick={copyToClipboard}
-              className="w-full bg-purple-100 hover:bg-purple-200 text-purple-700 font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              {copied ? '✓ Copied!' : '📋 Copy Link'}
-            </button>
-
-            <button
-              onClick={shareViaWhatsApp}
-              className="w-full bg-green-100 hover:bg-green-200 text-green-700 font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              💬 Share via WhatsApp
-            </button>
-
-            <button
-              onClick={shareViaEmail}
-              className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
-            >
-              ✉️ Share via Email
-            </button>
-          </div>
-        </div>
+        <ShareButtons 
+          giftUrl={`https://spurs899.github.io/GiftingApp/gift/${id}`}
+          senderName={giftData.sender_name}
+        />
 
         <div className="text-center mt-6">
           <Link href="/" className="text-purple-600 font-medium hover:underline">
