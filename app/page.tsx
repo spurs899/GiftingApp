@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
-
 export default async function HomePage() {
   const db = await getDb();
   

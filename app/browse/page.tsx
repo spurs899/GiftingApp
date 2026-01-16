@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
-
 interface PageProps {
   searchParams: Promise<{ category?: string }>;
 }
