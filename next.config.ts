@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
   },
   output: process.env.GITHUB_PAGES === 'true' ? 'export' : undefined,
   basePath: process.env.GITHUB_PAGES === 'true' ? '/GiftingApp' : '',
+  trailingSlash: true,
   images: {
-    unoptimized: process.env.GITHUB_PAGES === 'true',
+    unoptimized: true,
   },
   ...(process.env.GITHUB_PAGES === 'true' && {
-    // Skip API routes for static export
     experimental: {
       // Empty - API routes will just not be included in export
     }
