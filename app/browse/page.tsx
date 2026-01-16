@@ -3,13 +3,14 @@ import { getDb } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
-export default async function BrowsePage({
-  searchParams,
-}: {
-  searchParams: { category?: string };
-}) {
+interface PageProps {
+  searchParams: Promise<{ category?: string }>;
+}
+
+export default async function BrowsePage({ searchParams }: PageProps) {
+  const params = await searchParams;
   const db = await getDb();
-  const categoryFilter = searchParams.category;
+  const categoryFilter = params.category;
 
   const allItems = db.items.map(item => {
     const merchant = db.merchants.find(m => m.id === item.merchant_id);
