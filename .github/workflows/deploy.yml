@@ -27,30 +27,25 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
-          cache-dependency-path: gifting-app/package-lock.json
       
       - name: Install dependencies
-        working-directory: ./gifting-app
         run: npm ci
       
       - name: Generate static data
-        working-directory: ./gifting-app
         run: node scripts/setup-static-data.js
       
       - name: Build Next.js static export
-        working-directory: ./gifting-app
         env:
           GITHUB_PAGES: 'true'
         run: npm run build:static
       
       - name: Add .nojekyll
-        working-directory: ./gifting-app
         run: touch out/.nojekyll
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./gifting-app/out
+          path: ./out
 
   deploy:
     environment:
