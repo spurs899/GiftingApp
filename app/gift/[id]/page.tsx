@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import QRCode from 'qrcode';
 
 export default function GiftPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -12,18 +13,48 @@ export default function GiftPage({ params }: { params: Promise<{ id: string }> }
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/gift/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
+    async function loadGift() {
+      try {
+        // Load static data directly
+        const basePath = process.env.NODE_ENV === 'production' ? '/GiftingApp' : '';
+        const response = await fetch(`${basePath}/static-data.json`);
+        const db = await response.json();
+        
+        const giftData = db.gifts.find((g: any) => g.id === id);
+        if (!giftData) {
           notFound();
-        } else {
-          setGift(data);
-          setQrCodeUrl(data.qr_url);
-          setLoading(false);
+          return;
         }
-      })
-      .catch(() => setLoading(false));
+
+        const item = db.items.find((i: any) => i.id === giftData.item_id);
+        const merchant = db.merchants.find((m: any) => m.id === item?.merchant_id);
+
+        // Generate QR code
+        const qrUrl = await QRCode.toDataURL(giftData.qr_code, {
+          width: 300,
+          margin: 2,
+          color: {
+            dark: '#7c3aed',
+            light: '#ffffff'
+          }
+        });
+
+        setGift({
+          ...giftData,
+          item_name: item?.name,
+          item_image_url: item?.image_url,
+          merchant_name: merchant?.name,
+          merchant_locations: merchant?.locations
+        });
+        setQrCodeUrl(qrUrl);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to load gift:', error);
+        setLoading(false);
+      }
+    }
+
+    loadGift();
   }, [id]);
 
   const giftUrl = typeof window !== 'undefined' ? window.location.href : '';

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDb, saveDb } from '@/lib/db';
 import { nanoid } from 'nanoid';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
   const qr_code = formData.get('qr_code') as string;

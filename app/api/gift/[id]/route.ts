@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import QRCode from 'qrcode';
 
+export const dynamic = 'force-static';
+export const revalidate = false;
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
