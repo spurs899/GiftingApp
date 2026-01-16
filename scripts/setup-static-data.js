@@ -73,7 +73,7 @@ const items = [
   { merchant_id: 'merchant3', name: 'Rose Bouquet', description: 'Six fresh roses, mixed colors', value_cents: 3500, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400&h=300&fit=crop' },
   
   // Matcha House
-  { merchant_id: 'merchant4', name: 'Matcha Latte', description: 'Premium ceremonial matcha', value_cents: 700, category: 'Coffee & Matcha', image_url: 'https://images.unsplash.com/photo-1536013564325-e6e7e8cd7307?w=400&h=300&fit=crop' },
+  { merchant_id: 'merchant4', name: 'Matcha Latte', description: 'Premium ceremonial matcha', value_cents: 700, category: 'Coffee & Matcha', image_url: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=300&fit=crop' },
   { merchant_id: 'merchant4', name: 'Iced Matcha', description: 'Refreshing iced matcha latte', value_cents: 750, category: 'Coffee & Matcha', image_url: 'https://images.unsplash.com/photo-1582793988951-9aed5509eb97?w=400&h=300&fit=crop' },
   
   // Artisan Chocolates
