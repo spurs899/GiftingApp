@@ -56,8 +56,8 @@ export default function GiftForm({
       existingGifts.push(gift);
       localStorage.setItem('demo-gifts', JSON.stringify(existingGifts));
       
-      // Navigate to gift page
-      router.push(`/gift/${giftId}/`);
+      // Navigate to gift page using query parameter instead of path parameter
+      router.push(`/gift/view/?id=${giftId}`);
     } catch (error) {
       console.error('Failed to create gift:', error);
       alert('Failed to create gift. Please try again.');
