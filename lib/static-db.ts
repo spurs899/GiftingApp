@@ -42,5 +42,5 @@ export async function getClientDb(): Promise<Database> {
   
   const data = await getStaticDb();
   memoryDb = JSON.parse(JSON.stringify(data)); // Deep clone
-  return memoryDb;
+  return memoryDb as Database;
 }
