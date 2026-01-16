@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import GiftForm from '@/components/GiftForm';
 
 async function loadStaticData() {
   const fs = await import('fs/promises');
@@ -97,47 +98,14 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
             </div>
 
             {/* Send Gift Form */}
-            <form action={`/api/create-gift`} method="POST" className="space-y-4">
-              <input type="hidden" name="item_id" value={itemData.id} />
-              
-              <div>
-                <label htmlFor="sender_name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Your Name
-                </label>
-                <input
-                  type="text"
-                  id="sender_name"
-                  name="sender_name"
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="e.g., Sarah"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="recipient_message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Personal Message (Optional)
-                </label>
-                <textarea
-                  id="recipient_message"
-                  name="recipient_message"
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  placeholder="e.g., Happy Birthday! Enjoy a coffee on me ☕"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-4 rounded-full text-lg font-medium hover:shadow-xl transition-all hover:scale-105"
-              >
-                Create Gift & Get Link 🎁
-              </button>
-            </form>
-
-            <p className="text-sm text-gray-500 text-center mt-4">
-              💳 Demo mode - no payment required
-            </p>
+            <GiftForm 
+              itemId={itemData.id}
+              itemName={itemData.name}
+              valueCents={itemData.value_cents}
+              merchantId={itemData.merchant_id}
+              itemImageUrl={itemData.image_url}
+              itemDescription={itemData.description || ''}
+            />
           </div>
         </div>
       </div>
