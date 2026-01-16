@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 
-export const dynamicParams = true;
-
 export async function generateStaticParams() {
   return [];
 }

@@ -3,8 +3,6 @@ import { notFound } from 'next/navigation';
 import QRCode from 'qrcode';
 import { ShareButtons } from '@/components/ShareButtons';
 
-export const dynamicParams = true;
-
 export async function generateStaticParams() {
   return [];
 }
