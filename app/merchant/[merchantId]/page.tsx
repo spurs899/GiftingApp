@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 async function loadStaticData() {
   const fs = await import('fs/promises');
@@ -53,7 +54,7 @@ export default async function MerchantPage({ params }: { params: Promise<{ merch
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-purple-100">
           <div className="aspect-[21/9] bg-gradient-to-br from-purple-100 to-pink-100 relative">
-            <img
+            <ImageWithFallback
               src={merchant.image_url}
               alt={merchant.name}
               className="w-full h-full object-cover"
