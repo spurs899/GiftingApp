@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import QRCode from 'qrcode';
 import { ShareButtons } from '@/components/ShareButtons';
 
@@ -14,8 +15,21 @@ export default function GiftPageClient({ giftId }: GiftPageClientProps) {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    // Check if we were redirected from 404 with a different gift ID
+    const redirectPath = sessionStorage.getItem('redirectPath');
+    if (redirectPath && redirectPath.startsWith('/gift/')) {
+      sessionStorage.removeItem('redirectPath');
+      const pathGiftId = redirectPath.split('/')[2]?.replace(/\/$/, '');
+      if (pathGiftId && pathGiftId !== giftId) {
+        // Navigate to the correct gift ID
+        router.replace(`/gift/${pathGiftId}/`);
+        return;
+      }
+    }
+
     async function loadGift() {
       try {
         // First try localStorage for client-created gifts

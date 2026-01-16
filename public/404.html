@@ -2,10 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Loading...</title>
     <script>
       // GitHub Pages SPA redirect handler
-      // This handles client-side routing for dynamic paths
+      // Store the actual path we want to navigate to
       (function() {
         var path = window.location.pathname;
         
@@ -14,27 +15,22 @@
           path = path.substring('/GiftingApp'.length);
         }
         
-        // If it's the 404 page itself, go to home
-        if (path === '/404.html' || path === '/404') {
-          window.location.replace('/GiftingApp/');
-          return;
+        // Store the path in sessionStorage so the app can handle it
+        if (path && path !== '/' && path !== '/404.html' && path !== '/404') {
+          sessionStorage.setItem('redirectPath', path + window.location.search);
         }
         
-        // Add trailing slash if missing and not a file
-        if (path && !path.endsWith('/') && !path.includes('.')) {
-          path = path + '/';
-        }
-        
-        // Redirect to the path with basePath
-        if (path && path !== '/') {
-          window.location.replace('/GiftingApp' + path + window.location.search);
-        } else {
-          window.location.replace('/GiftingApp/');
-        }
+        // Redirect to the index page - the Next.js app will handle routing
+        window.location.replace('/GiftingApp/');
       })();
     </script>
   </head>
   <body>
-    <p>Redirecting...</p>
+    <div style="display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: system-ui, sans-serif;">
+      <div style="text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🎁</div>
+        <p style="color: #6b7280;">Loading...</p>
+      </div>
+    </div>
   </body>
 </html>

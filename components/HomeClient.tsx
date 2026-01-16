@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 interface Item {
   id: string;
@@ -22,8 +23,18 @@ export default function HomeClient() {
   const [categories, setCategories] = useState<string[]>([]);
   const [popularItems, setPopularItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    // Check if we were redirected from 404 with a path
+    const redirectPath = sessionStorage.getItem('redirectPath');
+    if (redirectPath) {
+      sessionStorage.removeItem('redirectPath');
+      // Use client-side navigation to the intended path
+      router.push(redirectPath);
+      return;
+    }
+
     async function loadData() {
       try {
         const basePath = process.env.NODE_ENV === 'production' ? '/GiftingApp' : '';
