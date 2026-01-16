@@ -68,9 +68,9 @@ const items = [
   { merchant_id: 'merchant2', name: 'Tiramisu Slice', description: 'Classic Italian dessert', value_cents: 850, category: 'Desserts & Chocolate', image_url: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop' },
   
   // Bloom Garden
-  { merchant_id: 'merchant3', name: 'Sunflower Bouquet', description: 'Bright and cheerful sunflowers', value_cents: 2500, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1597848212624-e50b21b717a8?w=400&h=300&fit=crop' },
-  { merchant_id: 'merchant3', name: 'Succulent Trio', description: 'Three mini succulents in pots', value_cents: 1800, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400&h=300&fit=crop' },
-  { merchant_id: 'merchant3', name: 'Rose Bouquet', description: 'Six fresh roses, mixed colors', value_cents: 3500, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1455659817273-f96807779a8a?w=400&h=300&fit=crop' },
+  { merchant_id: 'merchant3', name: 'Sunflower Bouquet', description: 'Bright and cheerful sunflowers', value_cents: 2500, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop' },
+  { merchant_id: 'merchant3', name: 'Succulent Trio', description: 'Three mini succulents in pots', value_cents: 1800, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=400&h=300&fit=crop' },
+  { merchant_id: 'merchant3', name: 'Rose Bouquet', description: 'Six fresh roses, mixed colors', value_cents: 3500, category: 'Flowers & Plants', image_url: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=400&h=300&fit=crop' },
   
   // Matcha House
   { merchant_id: 'merchant4', name: 'Matcha Latte', description: 'Premium ceremonial matcha', value_cents: 700, category: 'Coffee & Matcha', image_url: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=400&h=300&fit=crop' },
