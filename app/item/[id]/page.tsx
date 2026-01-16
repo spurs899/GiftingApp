@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import GiftForm from '@/components/GiftForm';
+import ImageWithFallback from '@/components/ImageWithFallback';
 
 async function loadStaticData() {
   const fs = await import('fs/promises');
@@ -61,11 +62,10 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
         <div className="bg-white rounded-3xl overflow-hidden shadow-xl border border-purple-100">
           {/* Item Image */}
           <div className="aspect-[16/9] bg-gradient-to-br from-purple-100 to-pink-100 relative">
-            <img
+            <ImageWithFallback
               src={itemData.image_url}
               alt={itemData.name}
               className="w-full h-full object-cover"
-              loading="lazy"
             />
           </div>
 

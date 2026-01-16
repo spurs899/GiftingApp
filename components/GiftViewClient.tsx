@@ -157,6 +157,10 @@ export default function GiftViewClient() {
                 alt={gift.item_name}
                 className="w-24 h-24 object-cover rounded-xl"
                 loading="lazy"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="96" height="96"%3E%3Crect fill="%23f3e8ff" width="96" height="96"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="system-ui" font-size="32" fill="%239333ea"%3E🎁%3C/text%3E%3C/svg%3E';
+                }}
               />
               <div className="flex-1">
                 <h3 className="font-bold text-gray-900 text-lg">{gift.item_name}</h3>
