@@ -25,7 +25,7 @@ export default async function MerchantPage({ params }: { params: Promise<{ merch
   const { merchantId } = await params;
   const db = await loadStaticData();
 
-  const merchant = db.merchants.find(m => m.id === merchantId);
+  const merchant = db.merchants.find((m: any) => m.id === merchantId);
 
   if (!merchant) {
     return (

@@ -26,13 +26,13 @@ export default async function ItemPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   const db = await loadStaticData();
 
-  const item = db.items.find(i => i.id === id);
+  const item = db.items.find((i: any) => i.id === id);
 
   if (!item) {
     notFound();
   }
 
-  const merchant = db.merchants.find(m => m.id === item.merchant_id);
+  const merchant = db.merchants.find((m: any) => m.id === item.merchant_id);
 
   if (!merchant) {
     notFound();
