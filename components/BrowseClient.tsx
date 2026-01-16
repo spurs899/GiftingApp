@@ -36,8 +36,8 @@ export function BrowseClient() {
 
         setItems(itemsWithMerchants);
         
-        const uniqueCategories = [...new Set(db.items.map((i: any) => i.category))].sort();
-        setCategories(uniqueCategories);
+        const uniqueCategories = [...new Set(db.items.map((i: any) => i.category as string))].sort();
+        setCategories(uniqueCategories as string[]);
         
         // Check URL for category filter
         const params = new URLSearchParams(window.location.search);
