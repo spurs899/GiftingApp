@@ -1,25 +1,29 @@
 import Link from 'next/link';
-import { getDb } from '@/lib/db';
 
-export async function generateStaticParams() {
+async function loadStaticData() {
   const fs = await import('fs/promises');
   const path = await import('path');
   const dataPath = path.join(process.cwd(), 'public', 'static-data.json');
   
   try {
     const data = await fs.readFile(dataPath, 'utf-8');
-    const db = JSON.parse(data);
-    return db.merchants.map((merchant: any) => ({
-      merchantId: merchant.id,
-    }));
-  } catch {
-    return [];
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Failed to load static data:', error);
+    return { items: [], merchants: [], gifts: [] };
   }
+}
+
+export async function generateStaticParams() {
+  const db = await loadStaticData();
+  return db.merchants.map((merchant: any) => ({
+    merchantId: merchant.id,
+  }));
 }
 
 export default async function MerchantPage({ params }: { params: Promise<{ merchantId: string }> }) {
   const { merchantId } = await params;
-  const db = await getDb();
+  const db = await loadStaticData();
 
   const merchant = db.merchants.find(m => m.id === merchantId);
 

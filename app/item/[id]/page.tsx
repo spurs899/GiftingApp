@@ -1,26 +1,30 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { getDb } from '@/lib/db';
 
-export async function generateStaticParams() {
+async function loadStaticData() {
   const fs = await import('fs/promises');
   const path = await import('path');
   const dataPath = path.join(process.cwd(), 'public', 'static-data.json');
   
   try {
     const data = await fs.readFile(dataPath, 'utf-8');
-    const db = JSON.parse(data);
-    return db.items.map((item: any) => ({
-      id: item.id,
-    }));
-  } catch {
-    return [];
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Failed to load static data:', error);
+    return { items: [], merchants: [], gifts: [] };
   }
+}
+
+export async function generateStaticParams() {
+  const db = await loadStaticData();
+  return db.items.map((item: any) => ({
+    id: item.id,
+  }));
 }
 
 export default async function ItemPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const db = await getDb();
+  const db = await loadStaticData();
 
   const item = db.items.find(i => i.id === id);
 
