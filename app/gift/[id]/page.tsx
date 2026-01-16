@@ -4,7 +4,19 @@ import QRCode from 'qrcode';
 import { ShareButtons } from '@/components/ShareButtons';
 
 export async function generateStaticParams() {
-  return [];
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  const dataPath = path.join(process.cwd(), 'public', 'static-data.json');
+  
+  try {
+    const data = await fs.readFile(dataPath, 'utf-8');
+    const db = JSON.parse(data);
+    return db.gifts.map((gift: any) => ({
+      id: gift.id,
+    }));
+  } catch {
+    return [];
+  }
 }
 
 async function loadStaticData() {
